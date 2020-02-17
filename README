@@ -1,0 +1,3 @@
+* Requires a Mongo database named `pubmed` and a collection named `articles`.
+
+* The `pubmed_to_mongo_new.rb` script is designed to parse and convert Medline citation abstract files as described and accessed here: https://www.nlm.nih.gov/databases/download/pubmed_medline.html 
