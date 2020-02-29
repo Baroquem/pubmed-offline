@@ -7,6 +7,9 @@ import Bookbag from './Bookbag';
 import SearchPage from './SearchPage';
 import SearchTips from './SearchTips';
 
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
+
 class App extends Component {
   // initialize state
   state = {
