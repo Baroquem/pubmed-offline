@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import axios from 'axios';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 
 import './App.css';
@@ -27,39 +26,17 @@ class App extends Component {
     success: true,
   };
 
-  // when component mounts, first thing it does is fetch all existing data in our db
-  // then we incorporate a polling logic so that we can easily see if our db has
-  // changed and implement those changes into our UI
   componentDidMount() {
     this.getArticleCount()
-    // this.getDataFromDb();
-    // if (!this.state.intervalIsSet) {
-    //   let interval = setInterval(this.getDataFromDb, 1000);
-    //   this.setState({ intervalIsSet: interval });
-    // }
   }
 
   // never let a process live forever
-  // always kill a process everytime we are done using it
   componentWillUnmount() {
     if (this.state.intervalIsSet) {
       clearInterval(this.state.intervalIsSet);
       this.setState({ intervalIsSet: null });
     }
   }
-
-  // just a note, here, in the front end, we use the id key of our data object
-  // in order to identify which we want to Update or delete.
-  // for our back end, we use the object id assigned by MongoDB to modify
-  // data base entries
-
-  // our first get method that uses our backend api to
-  // fetch data from our data base
-  getDataFromDb = () => {
-    fetch('http://localhost:3001/api/getArticle')
-      .then((articles) => articles.json())
-      .then((res) => this.setState({ articles: res.articles }));
-  };
 
   getArticleCount = () => {
     fetch('http://localhost:3001/api/getArticle/count')
@@ -81,59 +58,6 @@ class App extends Component {
     .then(res => this.setState({ searchResults: res.articles, success: res.success, isSearching: false, query: `keyword: ${query}` }));
   }
 
-  // our put method that uses our backend api
-  // to create new query into our data base
-  putDataToDB = (message) => {
-    let currentIds = this.state.articles.map((article) => article.id);
-    let idToBeAdded = 0;
-    while (currentIds.includes(idToBeAdded)) {
-      ++idToBeAdded;
-    }
-
-    axios.post('http://localhost:3001/api/putArticle', {
-      id: idToBeAdded,
-      title: message,
-    });
-  };
-
-  // our delete method that uses our backend api
-  // to remove existing database information
-  deleteFromDB = (idTodelete) => {
-    parseInt(idTodelete);
-    let objIdToDelete = null;
-    this.state.articles.forEach((article) => {
-      if (article.id == idTodelete) {
-        objIdToDelete = article._id;
-      }
-    });
-
-    axios.delete('http://localhost:3001/api/deleteArticle', {
-      data: {
-        id: objIdToDelete,
-      },
-    });
-  };
-
-  // our update method that uses our backend api
-  // to overwrite existing data base information
-  updateDB = (idToUpdate, updateToApply) => {
-    let objIdToUpdate = null;
-    parseInt(idToUpdate);
-    this.state.articles.forEach((article) => {
-      if (article.id == idToUpdate) {
-        objIdToUpdate = article._id;
-      }
-    });
-
-    axios.post('http://localhost:3001/api/updateArticle', {
-      id: objIdToUpdate,
-      update: { title: updateToApply },
-    });
-  };
-
-  // here is our UI
-  // it is easy to understand their functions when you
-  // see them render into our screen
   render() {
     const mainComponent = 
       <Fragment>
