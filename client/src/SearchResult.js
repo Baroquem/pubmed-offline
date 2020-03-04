@@ -21,7 +21,7 @@ const SearchResult = ({article, keywordSearchHandler}) => {
   else {
     return (
       <div key={article._id} className="searchResult" onClick={toggleArticleView}>
-        <span class="clickForDetail">Click for details</span>
+        <span className="clickForDetail">Click for details</span>
         <span><strong>{article.title}</strong>  {pubDateDisplay(article.pubDate)}</span>
         <br/><br/>
         <span><i>Subjects</i>: {subjectsDisplay(article.subjects, mySearchHandler)}</span>

@@ -7,7 +7,7 @@ import SearchHeader from './SearchHeader';
 import SearchResultList from './SearchResultList';
 import { commaNumber } from './utils';
 
-const SearchPage = ({articleCount, searchHandler, keywordSearchHandler, isSearching, success, searchResults, query}) => {
+const SearchPage = ({articleCount, searchHandler, keywordSearchHandler, isSearching, success, searchResults, query, error}) => {
 
   // Can be a string as well. Need to ensure each key-value pair ends with ;
   const override = css`
@@ -38,7 +38,8 @@ const SearchPage = ({articleCount, searchHandler, keywordSearchHandler, isSearch
         <SearchResultList query={query} results={searchResults} keywordSearchHandler={keywordSearchHandler} />
       }
       { !isSearching && !success &&
-        <p>Your search could not be completed. Your topic may be too broad; try narrowing your search terms.</p>
+        <p>System encountered an error: {String(error)}</p>
+        // <p>Your search could not be completed. Your topic may be too broad; try narrowing your search terms.</p>
       }
     </Fragment>
   );

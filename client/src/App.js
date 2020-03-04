@@ -27,7 +27,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    this.getArticleCount()
+   // this.getArticleCount()
   }
 
   // never let a process live forever
@@ -39,30 +39,50 @@ class App extends Component {
   }
 
   getArticleCount = () => {
-    fetch('http://localhost:3001/api/getArticle/count')
+    fetch('/api/getArticle/count')
       .then(count => count.json())
       .then(res => this.setState({ articleCount: res.count}));
   }
 
   findArticles = (query) => {
     this.setState({ articles: [], isSearching: true });
-    fetch(`http://localhost:3001/api/searchArticle/${query}`)
-    .then(articles => articles.json())
-    .then(res => this.setState({ searchResults: res.articles, success: res.success, isSearching: false, query }));
+    fetch(`/api/searchArticle/${query}`)
+    .then(response => {
+      console.log("response", response)
+      if (!response.ok) { throw response }
+      return response.json();
+    })
+    //.then(articles => articles.json())
+    .then(res => this.setState({ searchResults: res.articles, success: res.success, isSearching: false, query }))
+    .catch(err => {
+      this.setState({ error: err, isSearching: false, success: false })
+      console.log("ERROR: ", err)
+    })
   }
+
+  // Potential errors (name: message):
+  // Server isn't responding: TypeError: Failed to fetch
 
   findKeyword = (query) => {
     this.setState({ articles: [], isSearching: true });
-    fetch(`http://localhost:3001/api/searchKeyword/${query}`)
-    .then(articles => articles.json())
-    .then(res => this.setState({ searchResults: res.articles, success: res.success, isSearching: false, query: `keyword: ${query}` }));
+    fetch(`/api/searchKeyword/${query}`)
+    .then(response => {
+      console.log("response", response)
+      if (!response.ok) { throw response }
+      return response.json();
+    })
+    .then(res => this.setState({ searchResults: res.articles, success: res.success, isSearching: false, query: `keyword: ${query}` }))
+    .catch(err => {
+      this.setState({ error: err, isSearching: false, success: false })
+      console.log("ERROR: ", err)
+    })
   }
 
   render() {
     const mainComponent = 
       <Fragment>
         <header>
-          <div class="navlinks">
+          <div className="navlinks">
             <div id="bookbag"><Link to="/bookbag">Bookbag</Link></div>
             <div id="howto"><Link to="/howto">Search tips</Link></div>
           </div>
@@ -73,6 +93,7 @@ class App extends Component {
           searchHandler={this.findArticles}
           keywordSearchHandler={this.findKeyword}
           success={this.state.success}
+          error={this.state.error}
           query={this.state.query}
           searchResults={this.state.searchResults}
           isSearching={this.state.isSearching}

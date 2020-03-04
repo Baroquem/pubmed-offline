@@ -16,6 +16,12 @@ const SearchResultList = ({query, results, keywordSearchHandler}) => {
           </ul>
         </div>
       }
+      {
+        results.length === 0 && query !== null &&
+        <div>
+          <h4>There were no articles found for '{query}'.</h4>
+        </div>
+      }
     </Fragment>
   );
 }
